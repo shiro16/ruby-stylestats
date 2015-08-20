@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'stylestats/version'
+require 'style_stats/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "stylestats"
-  spec.version       = Stylestats::VERSION
+  spec.version       = StyleStats::VERSION
   spec.authors       = ["shiro16"]
   spec.email         = ["nyanyanyawan24@gmail.com"]
 
