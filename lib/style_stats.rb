@@ -6,8 +6,8 @@ class StyleStats
   end
 
   def analyze
-    result = @csses.map(:+)
-    Format.new(result, @options)
+    result = @csses.inject(:+)
+    Template.new(result, @options)
   end
 end
 
