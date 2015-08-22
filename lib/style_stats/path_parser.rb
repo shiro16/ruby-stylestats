@@ -1,5 +1,3 @@
-require 'nokogiri'
-require 'open-uri'
 class StyleStats
   class PathParser
     EXTENSIONS = ['.less', '.styl', '.stylus', '.css']
@@ -18,20 +16,23 @@ class StyleStats
     private
     def parse(path)
       if path =~ URI::regexp
-        EXTENSIONS.include?(File.extname(path)) ? [path] : find_css_by_response(path)
-      elsif File.directory?(path)
-        Dir::entries(path)
+        EXTENSIONS.include?(File.extname(path)) ? [path] : find_stylesheet(path)
       else
-        Dir.glob(path)
+        files = if File.directory?(path)
+                  Dir::entries(path)
+                else
+                  Dir.glob(path)
+                end
+        filter_extention(files)
       end
     end
 
-    def find_css_by_response(path)
+    def find_stylesheet(path)
        Nokogiri::HTML(open(path)).xpath('//link[@rel="stylesheet"]').map do |node|
          node["href"]
        end
-    rescue => e
-      p e
+    rescue
+      []
       # raise StyleStats::RequestError.new()
     end
 

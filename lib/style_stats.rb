@@ -1,3 +1,7 @@
+require 'nokogiri'
+require 'open-uri'
+require 'css_parser'
+
 class StyleStats
   def initialize(paths, options)
     @csses = PathParser.new(paths).files.collect do |file|
