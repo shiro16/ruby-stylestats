@@ -1,0 +1,32 @@
+Published: <%= Time.now %>
+Paths: <%= @paths.join("\n") %>
+Style Sheets: <%= @csses.count %>
+Style Elements: スタイルタグ(URL指定でhtmlにstyle tagがあった場合)
+Size: <%= @css.size %>
+Data URI Size: data:image/....のサイズ
+Ratio of Data URI Size: dataUriSize / this.cssSize
+Gzipped Size: gzip
+Rules: <%= @css.rules.count %>
+Selectors: <%= @css.selectors.count %>
+Declarations: <%= @css.declarations_line_count %>
+Simplicity: <%= (@css.rules.count / @css.selectors.count.to_f * 100).round(1) %>%
+Average of Identifier: <%= (@css.identifiers_total / @css.selectors.count.to_f).round(3) %>
+Most Identifier: <%= @css.selectors.first.count %>
+Most Identifier Selector: <%= @css.selectors.first.name %>
+Average of Cohesion: <%= (@css.declarations_line_count / @css.rules.count.to_f).round(3) %>
+Lowest Cohesion: <%= @css.most_declaration_count.declaration_count %>
+Lowest Cohesion Selector: <%= @css.most_declaration_count.name %>
+Total Unique Font Sizes: <%= @css.font_size.count %>
+Unique Font Sizes: <%= @css.font_size.join("\n") %>
+Total Unique Font Families: <%= @css.font_family.count %>
+Unique Font Families: <%= @css.font_family.join("\n") %>
+Total Unique Colors: <%= @css.color.count %>
+Unique Colors: <%= @css.color.join("\n") %>
+ID Selectors: <%= @css.selectors.count { |selector| selector.name.match(/^#/) } %>
+Universal Selectors: 
+Unqualified Attribute Selectors: 
+JavaScript Specific Selectors: 
+Important Keywords: 
+Float Properties: 
+Properties Count: <%= @css.declarations.take(10).map{ |property, declaration| "#{property}: #{declaration.values}" }.join("\n") %>
+Media Queries: 
