@@ -2,35 +2,56 @@ class StyleStats
   class PathParser
     EXTENSIONS = ['.less', '.styl', '.stylus', '.css']
 
-    attr_accessor :files
+    attr_accessor :stylesheets, :style_element
 
-    def initialize(paths)
-      paths = [paths] unless paths.is_a?(Array)
-
-      self.files = paths.map do |path|
-        files = parse(path)
-        filter_extention(files)
-      end.inject(:+)
+    def initialize(path)
+      parse(path)
     end
 
     private
     def parse(path)
-      if path =~ URI::regexp
-        EXTENSIONS.include?(File.extname(path)) ? [path] : find_stylesheet(path)
+      self.stylesheets = if path =~ URI::regexp
+                           request(path)
+                         else
+                           files = fetch_files(path)
+                           filter_extention(files)
+                         end
+    end
+
+    def request(url)
+      file = open(url)
+      case file.content_type
+      when'text/css'
+        [url]
+      when 'text/html'
+        doc = Nokogiri::HTML(file)
+        self.style_element = find_style_element(doc)
+        find_stylesheets(doc, url)
       else
-        files = if File.directory?(path)
-                  Dir::entries(path)
-                else
-                  Dir.glob(path)
-                end
-        filter_extention(files)
+        raise e
       end
     end
 
-    def find_stylesheet(path)
-       Nokogiri::HTML(open(path)).xpath('//link[@rel="stylesheet"]').map do |node|
-         node["href"]
-       end
+    def fetch_files(path)
+      if File.directory?(path)
+        Dir::entries(path)
+      else
+        Dir.glob(path)
+      end
+    end
+
+    def find_style_element(doc)
+      doc.xpath('//style').children.to_s
+    end
+
+    def find_stylesheets(doc, url)
+      base = URI.parse(url)
+      doc.xpath('//link[@rel="stylesheet"]').map do |node|
+        uri = URI.parse(node["href"])
+        uri.scheme = 'http' unless uri.scheme
+        uri.host = base.host unless uri.host
+        uri.to_s
+      end
     rescue
       []
       # raise StyleStats::RequestError.new()

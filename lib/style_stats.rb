@@ -1,17 +1,18 @@
+require 'erb'
 require 'nokogiri'
 require 'open-uri'
 require 'css_parser'
 
 class StyleStats
   def initialize(paths, options)
-    @csses = PathParser.new(paths).files.collect do |file|
+    paths = [paths] unless paths.is_a?(Array)
+    @csses = paths.collect do |file|
       Css.new(file)
     end
   end
 
   def analyze
-    result = @csses.inject(:+)
-    Template.new(result, @options)
+    Template.new(@csses, @options).render
   end
 end
 

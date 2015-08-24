@@ -1,59 +1,69 @@
+require 'style_stats/css/selector'
+require 'style_stats/css/declaration'
+require 'style_stats/css/summary_declaration'
 class StyleStats
   class Css
-    attr_accessor :rules, :selectors, :declarations, :size
+    attr_accessor :path, :size, :rules, :media_types, :selectors, :summary_declarations
 
-    def initialize(file)
-      parser = CssParser::Parser.new
-      parser.load_uri!(file)
-
-      self.size = File.size(file)
-
+    def initialize(path)
+      self.path = path
+      self.size = 0
       self.rules = []
+      self.media_types = []
       self.selectors = []
-      self.declarations = {}
-      selector_class = Struct.new(:name, :count, :declaration_count)
-      declaration_class = Struct.new(:values, :line_count)
-      parser.each_rule_set do |rule|
-        self.rules << rule
-        rule.each_selector do |selector, declarations, specificity|
-          declarations = declarations.split(';')
-          self.selectors << selector_class.new(selector, selector.split(/\>|\+|\~|\:|[\w\]]\.|[\w\]]\#|\[/).count, declarations.count)
-          declarations.each do |declaration|
-            property, value = declaration.split(':')
-            property.strip!
+      self.summary_declarations = {}
 
-            self.declarations[property] = declaration_class.new([], 0) unless self.declarations.has_key?(property)
-            self.declarations[property].values << value.strip
-            self.declarations[property].line_count += 1
-            self.declarations[property].values.uniq!
+      path_parser = StyleStats::PathParser.new(path)
+
+      parsers = path_parser.stylesheets.map do |file|
+        self.size += open(file).size
+
+        parser = CssParser::Parser.new
+        parser.load_uri!(file)
+        parser
+      end
+
+      if path_parser.style_element && path_parser.style_element.empty?.!
+        self.size += path_parser.style_element.length
+        parser = CssParser::Parser.new
+        parser.add_block!(path_parser.style_element)
+        parsers << parser
+      end
+
+      parsers.each { |parser| self.add_css_parser(parser) }
+    end
+
+    def [](property)
+      self.summary_declarations[property] || []
+    end
+
+    def most_decorations_selector
+      self.selectors.sort { |a, b| b.declarations.count <=> a.declarations.count }.first
+    end
+
+    def add_css_parser(parser)
+      parser.each_rule_set do |rule, media_types|
+        self.rules.push(rule)
+        self.media_types.concat(media_types)
+        rule.each_selector do |selector, declarations, specificity|
+          declarations = declarations.split(';').map do |declaration|
+            property, value = declaration.split(':').map(&:strip)
+
+            if self.summary_declarations.has_key?(property)
+              self.summary_declarations[property].add(value.strip)
+            else
+              self.summary_declarations[property] = SummaryDeclaration.new(value)
+            end
+
+            Declaration.new(property, value)
           end
+          self.selectors.push(Selector.new(selector, declarations))
         end
       end
-      self.selectors.sort! { |a, b| b.count <=> a.count }
-    end
 
-    def font_family
-      self.declarations["font-family"].values
-    end
-
-    def font_size
-      self.declarations["font-size"].values
-    end
-
-    def color
-      self.declarations["color"].values
-    end
-
-    def declarations_line_count
-      self.declarations.inject(0) { |sum, (key, declaration)| sum += declaration.line_count }
-    end
-
-    def identifiers_total
-      self.selectors.map(&:count).inject(:+)
-    end
-
-    def most_declaration_count
-      self.selectors.sort { |a, b| b.declaration_count <=> a.declaration_count }.first
+      self.media_types.uniq!
+      self.media_types.delete(:all)
+      self.selectors.sort! { |a, b| b.identifier_count <=> a.identifier_count }
     end
   end
 end
