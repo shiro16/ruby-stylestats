@@ -2,20 +2,22 @@ class StyleStats
   class PathParser
     EXTENSIONS = ['.less', '.styl', '.stylus', '.css']
 
-    attr_accessor :stylesheets, :style_element
+    attr_accessor :stylesheets, :style_elements
 
     def initialize(path)
+      self.style_elements = []
       parse(path)
     end
 
     private
     def parse(path)
-      self.stylesheets = if path =~ URI::regexp
-                           request(path)
-                         else
-                           files = fetch_files(path)
-                           filter_extention(files)
-                         end
+      files = if path =~ URI::regexp
+                request(path)
+              else
+                files = fetch_files(path)
+                filter_extention(files)
+              end
+      self.stylesheets = files.map { |file| open(file).read }
     end
 
     def request(url)
@@ -25,7 +27,7 @@ class StyleStats
         [url]
       when 'text/html'
         doc = Nokogiri::HTML(file)
-        self.style_element = find_style_element(doc)
+        self.style_elements = find_style_elements(doc)
         find_stylesheets(doc, url)
       else
         raise e
@@ -40,8 +42,8 @@ class StyleStats
       end
     end
 
-    def find_style_element(doc)
-      doc.xpath('//style').children.to_s
+    def find_style_elements(doc)
+      doc.xpath('//style').children
     end
 
     def find_stylesheets(doc, url)
@@ -50,6 +52,7 @@ class StyleStats
         uri = URI.parse(node["href"])
         uri.scheme = 'http' unless uri.scheme
         uri.host = base.host unless uri.host
+        uri.port = base.port unless uri.port
         uri.to_s
       end
     rescue

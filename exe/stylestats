@@ -1,3 +1,9 @@
 #!/usr/bin/env ruby
 
 require "stylestats"
+require 'optparse'
+opt = OptionParser.new
+
+options = ARGV.getopts("a:b:")
+p options
+p ARGV.first

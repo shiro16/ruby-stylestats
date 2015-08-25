@@ -6,47 +6,47 @@ require 'json'
 
 class StyleStats
   def initialize(paths, options = {})
-    @options = options
     paths = [paths] unless paths.is_a?(Array)
-    @csses = paths.collect do |file|
-      Css.new(file)
+    @options = options
+    @css = paths.inject(Css.new) do |css, file|
+      css.merge!(Css.new(file))
     end
   end
 
   def to_hash
-    css = @csses.first
+    selector = @css.sort_selector_by_declarations_count.first
     {
-      "Paths"                           => @csses.map(&:path),
-      "Style Sheets"                    =>  @csses.count,
-      "Style Elements"                  => 'スタイルタグ(URL指定でhtmlにstyle tagがあった場合)',
-      "Size"                            =>  @csses.map(&:size).inject(:+),
-      "Data URI Size"                   => 'data:image/....のサイズ',
-      "Ratio of Data URI Size"          => 'dataUriSize / this.cssSize',
-      "Gzipped Size"                    => 'gzip',
-      "Rules"                           => css.rules.count,
-      "Selectors"                       => css.selectors.count,
-      "Declarations"                    => css.selectors.map(&:declarations).flatten.count,
-      "Simplicity"                      => (css.rules.count / css.selectors.count.to_f * 100).round(1),
-      "Average of Identifier"           => (css.selectors.map(&:identifier_count).inject(:+) / css.selectors.count.to_f).round(3),
-      "Most Identifier"                 => css.selectors.first.identifier_count,
-      "Most Identifier Selector"        => css.selectors.first.name,
-      "Average of Cohesion"             => (css.selectors.map(&:declarations).flatten.count / css.rules.count.to_f).round(3),
-      "Lowest Cohesion"                 => css.most_decorations_selector.declarations.count,
-      "Lowest Cohesion Selector"        => css.most_decorations_selector.name,
-      "Total Unique Font Sizes"         => css["font-size"].values.count,
-      "Unique Font Sizes"               => css["font-size"].values,
-      "Total Unique Font Families"      => css["font-family"].values.count,
-      "Unique Font Families"            => css["font-family"].values,
-      "Total Unique Colors"             => css["color"].values.count,
-      "Unique Colors"                   => css["color"].values,
-      "ID Selectors"                    => css.selectors.count { |selector| selector.name.match(/#/) },
-      "Universal Selectors"             => css.selectors.count { |selector| selector.name.match(/\*/) },
-      "Unqualified Attribute Selectors" => css.selectors.count { |selector| selector.name.match(/\[.+\]$/) },
-      "JavaScript Specific Selectors"   => css.selectors.count { |selector| selector.name.match(/[#\\.]js\\-/) },
-      "Important Keywords"              => "declaration.value indexOf('!important') count",
-      "Float Properties"                => "declaration property float count",
-      "Properties Count"                => css.summary_declarations.take(10).map{ |property, declaration| "#{property}: #{declaration.values.count}" },
-      "Media Queries"                   => css.media_types.count
+      "Paths"                           => @css.paths,
+      "Style Sheets"                    => @css.stylesheets.count,
+      "Style Elements"                  => @css.elements.count,
+      "Size"                            => @css.size,
+      "Data URI Size"                   => @css.data_uri_size,
+      "Ratio of Data URI Size"          => "#{@css.data_uri_size.fdiv(@css.size).round(1) * 100}%",
+      "Gzipped Size"                    => @css.gzipped_size,
+      "Rules"                           => @css.rules.count,
+      "Selectors"                       => @css.selectors.count,
+      "Declarations"                    => @css.declarations.count,
+      "Simplicity"                      => "#{@css.rules.count.fdiv(@css.selectors.count).round(1) * 100}%",
+      "Average of Identifier"           => @css.selectors.map(&:identifier_count).inject(:+).fdiv(@css.selectors.count).round(3),
+      "Most Identifier"                 => @css.selectors.first.identifier_count,
+      "Most Identifier Selector"        => @css.selectors.first.name,
+      "Average of Cohesion"             => @css.declarations.count.fdiv(@css.rules.count).round(3),
+      "Lowest Cohesion"                 => selector.declarations.count,
+      "Lowest Cohesion Selector"        => selector.name,
+      "Total Unique Font Sizes"         => @css["font-size"][:count],
+      "Unique Font Sizes"               => @css["font-size"][:values],
+      "Total Unique Font Families"      => @css["font-family"][:count],
+      "Unique Font Families"            => @css["font-family"][:values],
+      "Total Unique Colors"             => @css["color"][:count],
+      "Unique Colors"                   => @css["color"][:values],
+      "ID Selectors"                    => @css.selectors_count(:id),
+      "Universal Selectors"             => @css.selectors_count(:universal),
+      "Unqualified Attribute Selectors" => @css.selectors_count(:unqualified),
+      "JavaScript Specific Selectors"   => @css.selectors_count(:js),
+      "Important Keywords"              => @css.declarations_count(:important),
+      "Float Properties"                => @css.declarations_count(:float),
+      "Properties Count"                => @css.aggregate_declarations.declarations.take(10).map{ |property, declaration| "#{property}: #{declaration[:count]}" },
+      "Media Queries"                   => @css.media_types.count
     }
   end
 
