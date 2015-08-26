@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'css_parser'
 require 'json'
+require 'command_line_reporter'
 
 class StyleStats
   def initialize(paths, options = {})
@@ -16,6 +17,7 @@ class StyleStats
   def to_hash
     selector = @css.sort_selector_by_declarations_count.first
     {
+      "Published"                       => Time.now,
       "Paths"                           => @css.paths,
       "Style Sheets"                    => @css.stylesheets.count,
       "Style Elements"                  => @css.elements.count,
@@ -45,7 +47,7 @@ class StyleStats
       "JavaScript Specific Selectors"   => @css.selectors_count(:js),
       "Important Keywords"              => @css.declarations_count(:important),
       "Float Properties"                => @css.declarations_count(:float),
-      "Properties Count"                => @css.aggregate_declarations.declarations.take(10).map{ |property, declaration| "#{property}: #{declaration[:count]}" },
+      "Properties Count"                => @css.aggregate_declarations.declarations.sort { |(k1, v1), (k2, v2)| v2[:count] <=> v1[:count] }.take(10).map{ |property, declaration| "#{property}: #{declaration[:count]}" },
       "Media Queries"                   => @css.media_types.count
     }
   end
@@ -60,3 +62,4 @@ require 'style_stats/css'
 require 'style_stats/path_parser'
 require 'style_stats/template'
 require 'style_stats/cli'
+require 'style_stats/errors'

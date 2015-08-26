@@ -30,8 +30,10 @@ class StyleStats
         self.style_elements = find_style_elements(doc)
         find_stylesheets(doc, url)
       else
-        raise e
+        raise ContentError.new(' [ERROR] Content type is not HTML or CSS!')
       end
+    rescue SocketError
+      raise RequestError.new(' [ERROR] getaddrinfo ENOTFOUND')
     end
 
     def fetch_files(path)
@@ -55,9 +57,6 @@ class StyleStats
         uri.port = base.port unless uri.port
         uri.to_s
       end
-    rescue
-      []
-      # raise StyleStats::RequestError.new()
     end
 
     def filter_extention(files)
