@@ -1,11 +1,32 @@
 require 'spec_helper'
 
-describe Stylestats do
-  it 'has a version number' do
-    expect(Stylestats::VERSION).not_to be nil
+describe StyleStats do
+  describe '.initialize' do
+    it 'set @options' do
+
+    end
+
+    it 'call PathParser.new' do
+
+    end
+
+    it 'call Css.new' do
+
+    end
+
+    it 'set @css' do
+
+    end
   end
 
-  it 'does something useful' do
-    expect(false).to eq(true)
+  describe '#render' do
+    let(:style_stats) { StyleStats.new() }
+
+    it 'call Template#render' do
+    end
+  end
+
+  it 'has a version number' do
+    expect(StyleStats::VERSION).not_to be nil
   end
 end
