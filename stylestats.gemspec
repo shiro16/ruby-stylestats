@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'style_stats/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "stylestats"
+  spec.name          = "style_stats"
   spec.version       = StyleStats::VERSION
   spec.authors       = ["shiro16"]
   spec.email         = ["nyanyanyawan24@gmail.com"]
@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency 'nokogiri'
+  spec.add_runtime_dependency 'oga'
   spec.add_runtime_dependency 'css_parser'
   spec.add_runtime_dependency 'command_line_reporter'
 

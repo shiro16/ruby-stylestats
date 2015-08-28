@@ -7,4 +7,7 @@ class StyleStats
 
   class ContentError < BaseError
   end
+
+  class InvalidError < BaseError
+  end
 end

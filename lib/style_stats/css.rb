@@ -1,6 +1,8 @@
+require 'style_stats/css/fetch'
 require 'style_stats/css/selector'
 require 'style_stats/css/declaration'
 require 'style_stats/css/aggregate_declaration'
+require 'style_stats/css/analyze'
 
 class StyleStats
   class Css
@@ -8,34 +10,14 @@ class StyleStats
 
     def initialize(path = nil)
       self.path = path
-      self.paths = [path]
+      self.paths = path ? [path] : []
       self.rules = []
       self.media_types = []
       self.selectors = []
       self.stylesheets = []
       self.elements = []
 
-      self.paths.compact!
       parse if path
-    end
-
-    def add_css_parser(parser)
-      parser.each_rule_set do |rule, media_types|
-        self.rules.push(rule)
-        self.media_types.concat(media_types)
-        rule.each_selector do |selector, declarations, specificity|
-          declarations = declarations.split(/;(?!base64)/).map do |declaration|
-            property, value = declaration.split(':', 2).map(&:strip)
-            Declaration.new(property, value)
-          end
-          self.selectors.push(Selector.new(selector, declarations))
-        end
-      end
-
-      self.media_types.uniq!
-      self.media_types.delete(:all)
-      self.selectors.sort! { |a, b| b.identifier_count <=> a.identifier_count }
-      clear_aggregate
     end
 
     def merge(css)
@@ -44,7 +26,7 @@ class StyleStats
 
     def merge!(css)
       clear_aggregate
-      self.paths << css.path if css.path
+      self.paths.push(css.path) if css.path
       self.rules += css.rules
       self.media_types += css.media_types
       self.selectors += css.selectors
@@ -87,7 +69,7 @@ class StyleStats
     def declarations_count(type = nil)
       case type
       when :important
-        declarations.count { |declaration| declaration.value.match(/!important/) }
+        declarations.map(&:important).count { |important| important }
       when :float
         declarations.count { |declaration| declaration.property.match(/float/) }
       else
@@ -119,24 +101,38 @@ class StyleStats
 
     private
     def parse
-      path_parser = StyleStats::PathParser.new(self.path)
+      fetch = Fetch.new(self.path)
 
-      self.stylesheets = path_parser.stylesheets
-      self.elements = path_parser.style_elements
+      self.stylesheets = fetch.stylesheets
+      self.elements = fetch.elements
 
-      parsers = self.stylesheets.map do |stylesheet|
-        parser = CssParser::Parser.new
-        parser.add_block!(stylesheet)
-        parser
+      parsers = (self.stylesheets + self.elements).inject([]) { |parsers, style| parsers.push(create_css_parser(style)) }
+      parsers.each { |parser| merge_css_parser(parser) }
+    end
+
+    def create_css_parser(style)
+      parser = CssParser::Parser.new
+      parser.add_block!(style)
+      parser
+    end
+
+    def merge_css_parser(parser)
+      parser.each_rule_set do |rule, media_types|
+        self.rules.push(rule)
+        self.media_types.concat(media_types)
+        rule.each_selector do |selector, declarations, specificity|
+          declarations = declarations.split(/;(?!base64)/).map do |declaration|
+            property, value = declaration.split(':', 2).map(&:strip)
+            Declaration.new(property, value)
+          end
+          self.selectors.push(Selector.new(selector, declarations))
+        end
       end
 
-      if self.elements && self.elements.empty?.!
-        parser = CssParser::Parser.new
-        parser.add_block!(self.elements.to_s)
-        parsers << parser
-      end
-
-      parsers.each { |parser| self.add_css_parser(parser) }
+      self.media_types.uniq!
+      self.media_types.delete(:all)
+      self.selectors.sort! { |a, b| b.identifier_count <=> a.identifier_count }
+      clear_aggregate
     end
   end
 end

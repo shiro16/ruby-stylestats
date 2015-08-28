@@ -6,4 +6,4 @@ opt = OptionParser.new
 
 options = {}
 style_stats = StyleStats.new(ARGV, options)
-puts style_stats.analyze
+style_stats.render
