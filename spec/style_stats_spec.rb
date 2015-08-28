@@ -1,28 +1,28 @@
 require 'spec_helper'
 
 describe StyleStats do
-  describe '.initialize' do
+  let(:style_stats) { StyleStats.new(spec_css_path, options) }
+  let(:options) { {format: :json} }
+
+  describe '#initialize' do
     it 'set @options' do
-
+      expect(style_stats.instance_variable_get(:@options)).to eq(options)
     end
 
-    it 'call PathParser.new' do
-
+    it 'call StyleStats::PathParser.new' do
+      expect(StyleStats::PathParser).to receive(:new).with(spec_css_path).and_return(StyleStats::PathParser.new(spec_css_path))
+      style_stats
     end
 
-    it 'call Css.new' do
-
-    end
-
-    it 'set @css' do
-
+    it 'set instance of StyleStats::Css to @css ' do
+      expect(style_stats.instance_variable_get(:@css)).to be_kind_of(StyleStats::Css)
     end
   end
 
   describe '#render' do
-    let(:style_stats) { StyleStats.new() }
-
-    it 'call Template#render' do
+    it 'call StyleStats::Template#render' do
+      expect_any_instance_of(StyleStats::Template).to receive(:render)
+      style_stats.render
     end
   end
 
