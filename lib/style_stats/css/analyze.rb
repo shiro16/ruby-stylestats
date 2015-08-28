@@ -2,6 +2,7 @@ class StyleStats
   class Css
     def analyze
       selector = sort_selector_by_declarations_count.first
+      most_indentifier_selector = selectors.first || StyleStats::Css::Selector.new
       {
         "Published"                       => Time.now,
         "Paths"                           => paths,
@@ -15,9 +16,9 @@ class StyleStats
         "Selectors"                       => selectors.count,
         "Declarations"                    => declarations.count,
         "Simplicity"                      => "#{rules.count.fdiv(selectors.count).round(1) * 100}%",
-        "Average of Identifier"           => selectors.map(&:identifier_count).inject(:+).fdiv(selectors.count).round(3),
-        "Most Identifier"                 => selectors.first.identifier_count,
-        "Most Identifier Selector"        => selectors.first.name,
+        "Average of Identifier"           => selectors.map(&:identifier_count).inject(0, :+).fdiv(selectors.count).round(3),
+        "Most Identifier"                 => most_indentifier_selector.identifier_count,
+        "Most Identifier Selector"        => most_indentifier_selector.name,
         "Average of Cohesion"             => declarations.count.fdiv(rules.count).round(3),
         "Lowest Cohesion"                 => selector.declarations.count,
         "Lowest Cohesion Selector"        => selector.name,

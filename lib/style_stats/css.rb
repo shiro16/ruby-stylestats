@@ -62,7 +62,7 @@ class StyleStats
       when :js
         selectors.count { |selector| selector.name.match(/[#\\.]js\\-/) }
       else
-        seletors.count
+        selectors.count
       end
     end
 
@@ -86,13 +86,7 @@ class StyleStats
     end
 
     def aggregate_declaration
-      @aggregate_declaration ||= aggregate_declarations
-    end
-
-    def aggregate_declarations
-      aggregate_declaration = AggregateDeclaration.new
-      declarations.each { |declaration| aggregate_declaration.add(declaration.property, declaration.value) }
-      aggregate_declaration
+      @aggregate_declaration ||= aggregate
     end
 
     def declarations
@@ -133,6 +127,12 @@ class StyleStats
       self.media_types.delete(:all)
       self.selectors.sort! { |a, b| b.identifier_count <=> a.identifier_count }
       clear_aggregate
+    end
+
+    def aggregate
+      aggregate_declaration = AggregateDeclaration.new
+      declarations.each { |declaration| aggregate_declaration.add(declaration.property, declaration.value) }
+      aggregate_declaration
     end
   end
 end

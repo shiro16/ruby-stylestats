@@ -16,13 +16,13 @@ class StyleStats
         raise InvalidError.new if filter_extention([path]).empty?
         [path]
       else
-        filter_extention(parse_files(path))
+        filter_extention(fetch_files(path))
       end
     end
 
     def fetch_files(path)
       if File.directory?(path)
-        Dir::entries(path)
+        Dir.entries(path)
       else
         Dir.glob(path)
       end
