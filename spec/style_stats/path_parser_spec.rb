@@ -41,17 +41,17 @@ describe StyleStats::PathParser do
     describe '#fetch_files' do
       context 'when path is directory' do
         it do
-          expect(Dir).to receive(:entries).with(fixtures_path_for)
+          expect(Dir).to receive(:entries).with(fixtures_path_for).and_return([])
           path_parser.send(:fetch_files, fixtures_path_for)
         end
 
         it {
           expect(path_parser.send(:fetch_files, fixtures_path_for)).to eq([
-            '.',
-            '..',
-            'spec.css',
-            'spec.html',
-            'spec.txt'
+            fixtures_path_for('.'),
+            fixtures_path_for('..'),
+            fixtures_path_for('spec.css'),
+            fixtures_path_for('spec.html'),
+            fixtures_path_for('spec.txt')
           ])
         }
       end

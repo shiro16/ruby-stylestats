@@ -13,7 +13,7 @@ class StyleStats
     def render
       case @options[:format].to_sym
       when :md, :html
-        text = File.read("#{File.dirname(__FILE__)}/lib/style_stats/templates/#{@options[:format]}.erb")
+        text = File.read("#{File.dirname(__FILE__)}/templates/#{@options[:format]}.erb")
         ERB.new(text, nil, '-').run(binding)
       when :json
         puts @css.analyze.to_json

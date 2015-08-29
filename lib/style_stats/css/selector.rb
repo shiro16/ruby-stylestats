@@ -8,7 +8,8 @@ class StyleStats::Css
     end
 
     def identifier_count
-      self.name.split(/\>|\+|\~|\:|[\w\]]\.|[\w\]]\#|\[/).count
+      trimmed_name = self.name.gsub(/\s?([\>\+\~])\s?/) { $1 }
+      trimmed_name.gsub(/\s+/, ' ').split(/\s|\>|\+|\~|\:|[\w\]]\.|[\w\]]\#|\[/).count
     end
   end
 end

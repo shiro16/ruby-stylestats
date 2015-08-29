@@ -1,5 +1,5 @@
 def fixtures_path_for(file=nil)
-  File.dirname(__FILE__) + '/../fixtures/' + file.to_s
+  'spec/fixtures/' + file.to_s
 end
 
 def spec_css_path
