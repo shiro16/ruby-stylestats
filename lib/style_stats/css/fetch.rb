@@ -13,7 +13,7 @@ class StyleStats::Css
       if path =~ URI::regexp
         request(path)
       else
-        read(path)
+        self.stylesheets.push(open(path).read)
       end
     end
 
@@ -27,10 +27,10 @@ class StyleStats::Css
         find_stylesheets(doc, path).each { |file| request(file) }
         self.elements = find_elements(doc)
       else
-        raise ContentError.new(' [ERROR] Content type is not HTML or CSS!')
+        raise StyleStats::ContentError.new
       end
     rescue SocketError
-      raise RequestError.new(' [ERROR] getaddrinfo ENOTFOUND')
+      raise StyleStats::RequestError.new
     end
 
     def find_elements(doc)
@@ -46,10 +46,6 @@ class StyleStats::Css
         uri.port = base.port unless uri.port
         uri.to_s
       end
-    end
-
-    def read(path)
-      self.stylesheets.push(open(path).read)
     end
   end
 end

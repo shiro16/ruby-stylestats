@@ -13,7 +13,7 @@ class StyleStats
       if path =~ URI::regexp
         [path]
       elsif File.file?(path)
-        raise InvalidError.new if filter_extention([path]).empty?
+        raise StyleStats::InvalidError.new if filter_extention([path]).empty?
         [path]
       else
         filter_extention(fetch_files(path))
@@ -22,7 +22,7 @@ class StyleStats
 
     def fetch_files(path)
       if File.directory?(path)
-        Dir.entries(path)
+        Dir.entries(path).map { |file| path + file }
       else
         Dir.glob(path)
       end

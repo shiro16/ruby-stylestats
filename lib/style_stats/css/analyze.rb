@@ -34,7 +34,7 @@ class StyleStats
         "JavaScript Specific Selectors"   => selectors_count(:js),
         "Important Keywords"              => declarations_count(:important),
         "Float Properties"                => declarations_count(:float),
-        "Properties Count"                => aggregate_declarations.declarations.sort { |(_, v1), (_, v2)| v2[:count] <=> v1[:count] }.take(10).map{ |property, declaration| "#{property}: #{declaration[:count]}" },
+        "Properties Count"                => aggregate_declaration.declarations.sort { |(_, v1), (_, v2)| v2[:count] <=> v1[:count] }.take(10).map{ |property, declaration| "#{property}: #{declaration[:count]}" },
         "Media Queries"                   => media_types.count
       }
     end
