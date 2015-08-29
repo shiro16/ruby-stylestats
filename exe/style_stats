@@ -5,7 +5,7 @@ require 'optparse'
 
 options = {}
 opt = OptionParser.new
-opt.banner = 'Usage: stylestats [options] <file ...>'
+opt.banner = 'Usage: style_stats [options] <file ...>'
 
 opt.on('-h', '--help', 'output usage information') do
   puts opt

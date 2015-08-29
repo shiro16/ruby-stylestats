@@ -22,7 +22,7 @@ Or install it yourself as:
 ## Usage
 
 ```sh
-$ stylestats path/to/stylesheet.css
+$ style_stats path/to/stylesheet.css
 ┌─────────────────────────────────┬──────────────────────────┐
 │ Published                       │ April 30, 2015 10:35 AM  │
 ├─────────────────────────────────┼──────────────────────────┤
@@ -98,42 +98,42 @@ Specified css file will be analyzed.
 
 ```sh
 # Providing multiple input is also supported.
-$ stylestats foo.css bar.css baz.css
+$ style_stats foo.css bar.css baz.css
 ```
 
 CSS files in specified directory will be analyzed.
 
 ```sh
-$ stylestats path/to/dir
+$ style_stats path/to/dir
 ```
 
 Glob input is supported (quotes are required).
 
 ```sh
-$ stylestats 'path/**/*.css'
+$ style_stats 'path/**/*.css'
 ```
 
 You can specify a remote CSS file.
 
 ```sh
-$ stylestats http://example.com/css/wisteria.css
+$ style_stats http://example.com/css/wisteria.css
 ```
 
 If you specify an HTML page, StyleStats will analyze stylesheets and `style` elements.
 
 ```sh
-$ stylestats http://example.com/
+$ style_stats http://example.com/
 ```
 
 `--format` option outputs JSON, HTML, Markdown.
 
 ```sh
-$ stylestats foo.css -f <json|html|md>
+$ style_stats foo.css -f <json|html|md>
 ```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment. Run `bundle exec stylestats` to use the gem in this directory, ignoring other installed copies of this gem.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment. Run `bundle exec style_stats` to use the gem in this directory, ignoring other installed copies of this gem.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
