@@ -50,6 +50,7 @@ describe StyleStats::PathParser do
             '.',
             '..',
             'spec.css',
+            'spec.html',
             'spec.txt'
           ])
         }
