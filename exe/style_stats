@@ -2,8 +2,27 @@
 
 require "style_stats"
 require 'optparse'
-opt = OptionParser.new
 
 options = {}
-style_stats = StyleStats.new(ARGV, options)
-style_stats.render
+opt = OptionParser.new
+opt.banner = 'Usage: stylestats [options] <file ...>'
+
+opt.on('-h', '--help', 'output usage information') do
+  puts opt
+  exit
+end
+
+opt.on('-V', '--version', 'output the version number') do |v|
+  puts StyleStats::VERSION
+  exit
+end
+
+opt.on('-f', '--format <format>', 'set the output format <json|html|md|csv>') { |v| options[:format] = v }
+
+opt.parse!(ARGV)
+
+if ARGV.empty?
+  puts opt
+else
+  StyleStats::CLI.run(ARGV, options)
+end
