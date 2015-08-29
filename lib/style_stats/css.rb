@@ -106,7 +106,7 @@ class StyleStats
 
     def create_css_parser(style)
       parser = CssParser::Parser.new
-      parser.add_block!(style)
+      parser.add_block!(style.dup)
       parser
     end
 

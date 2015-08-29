@@ -67,13 +67,13 @@ describe StyleStats::Css do
   describe '#size' do
     let(:css) { StyleStats::Css.new(spec_css_path) }
 
-    it { expect(css.size).to eq(702) }
+    it { expect(css.size).to eq(754) }
   end
 
   describe '#gzipped_size' do
     let(:css) { StyleStats::Css.new(spec_css_path) }
 
-    it { expect(css.gzipped_size).to eq(384) }
+    it { expect(css.gzipped_size).to eq(418) }
   end
 
   describe '#selectors_count' do
