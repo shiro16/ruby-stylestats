@@ -17,7 +17,7 @@ opt.on('-V', '--version', 'output the version number') do |v|
   exit
 end
 
-opt.on('-f', '--format <format>', 'set the output format <json|html|md|csv>') { |v| options[:format] = v }
+opt.on('-f', '--format <format>', 'set the output format <json|html|md>') { |v| options[:format] = v }
 
 opt.parse!(ARGV)
 
