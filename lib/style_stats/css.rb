@@ -8,7 +8,7 @@ class StyleStats
   class Css
     attr_accessor :path, :paths, :rules, :media_types, :selectors, :stylesheets, :elements
 
-    def initialize(path = nil)
+    def initialize(path = nil, options = {})
       self.path = path
       self.paths = path ? [path] : []
       self.rules = []
@@ -17,6 +17,7 @@ class StyleStats
       self.stylesheets = []
       self.elements = []
 
+      @options = options
       parse if path
     end
 
@@ -95,7 +96,7 @@ class StyleStats
 
     private
     def parse
-      fetch = Fetch.new(self.path)
+      fetch = Fetch.new(self.path, @options)
 
       self.stylesheets = fetch.stylesheets
       self.elements = fetch.elements

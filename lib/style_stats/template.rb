@@ -11,7 +11,7 @@ class StyleStats
     end
 
     def render
-      case @options[:format].to_sym
+      case @options[:format].to_s.to_sym
       when :md, :html
         text = File.read("#{File.dirname(__FILE__)}/templates/#{@options[:format]}.erb")
         ERB.new(text, nil, '-').run(binding)
