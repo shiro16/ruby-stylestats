@@ -30,7 +30,7 @@ class StyleStats::Css
       else
         raise StyleStats::ContentError.new
       end
-    rescue
+    rescue SocketError, RuntimeError
       raise StyleStats::RequestError.new
     end
 
