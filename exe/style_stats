@@ -17,6 +17,8 @@ opt.on('-V', '--version', 'output the version number') do |v|
   exit
 end
 
+
+opt.on('-c', '--config <path>', 'set configurations') { |v| options[:config] = v }
 opt.on('-f', '--format <format>', 'set the output format <json|html|md>') { |v| options[:format] = v }
 opt.on('-m', '--mobile [name]', 'set the mobile user agent') { |v| options[:user_agent] = v || 'ios' }
 opt.on('--user-anget <string>', 'set the user agent') { |v| options[:user_agent] = v }
