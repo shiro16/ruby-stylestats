@@ -31,6 +31,16 @@ class StyleStats
           @options[:user_agent]
         end
       end
+
+      def configuration
+        config = case File.extname(@options[:config])
+                 when '.yml', '.yaml'
+                   YAML.load_file(@options[:config])
+                 when '.json'
+                   json = File.read(@options[:config])
+                   JSON.parse(json)
+                 end
+      end
     end
   end
 end
