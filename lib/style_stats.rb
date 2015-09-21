@@ -6,6 +6,14 @@ require 'json'
 require 'command_line_reporter'
 
 class StyleStats
+  def self.configure(&block)
+    yield(configuration)
+  end
+
+  def self.configuration
+    @_configuration ||= StyleStats::Configuration.new
+  end
+
   def initialize(paths, options = {})
     paths = [paths] unless paths.is_a?(Array)
 
@@ -39,6 +47,7 @@ class StyleStats
 end
 
 require 'style_stats/version'
+require 'style_stats/configuration'
 require 'style_stats/path_parser'
 require 'style_stats/css'
 require 'style_stats/template'
