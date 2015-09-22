@@ -2,6 +2,10 @@ class StyleStats
   class CLI
     class << self
       def run(files, option)
+        StyleStats.configure do |config|
+          config.options.merge!(configuration)
+        end
+
         @options = option
         stylestats = StyleStats.new(files, options)
         stylestats.render
