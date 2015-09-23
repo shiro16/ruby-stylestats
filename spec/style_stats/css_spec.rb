@@ -73,13 +73,13 @@ describe StyleStats::Css do
   describe '#size' do
     let(:css) { StyleStats::Css.new(spec_css_path) }
 
-    it { expect(css.size).to eq(754) }
+    it { expect(css.size).to eq(776) }
   end
 
   describe '#gzipped_size' do
     let(:css) { StyleStats::Css.new(spec_css_path) }
 
-    it { expect(css.gzipped_size).to eq(418) }
+    it { expect(css.gzipped_size).to eq(433) }
   end
 
   describe '#selectors_count' do
@@ -95,7 +95,7 @@ describe StyleStats::Css do
   describe '#declarations_count' do
     let(:css) { StyleStats::Css.new(spec_css_path) }
 
-    it('type is nil') { expect(css.declarations_count).to eq(38) }
+    it('type is nil') { expect(css.declarations_count).to eq(39) }
     it('type is :important') { expect(css.declarations_count(:important)).to eq(1) }
     it('type is :float') { expect(css.declarations_count(:float)).to eq(1) }
   end

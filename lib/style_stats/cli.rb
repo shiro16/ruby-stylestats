@@ -2,11 +2,11 @@ class StyleStats
   class CLI
     class << self
       def run(files, option)
+        @options = option
         StyleStats.configure do |config|
           config.options.merge!(configuration)
         end
 
-        @options = option
         stylestats = StyleStats.new(files, options)
         stylestats.render
       rescue StyleStats::RequestError
@@ -37,12 +37,14 @@ class StyleStats
       end
 
       def configuration
-        config = case File.extname(@options[:config])
+        config = case File.extname(@options[:config].to_s)
                  when '.yml', '.yaml'
                    YAML.load_file(@options[:config])
                  when '.json'
                    json = File.read(@options[:config])
                    JSON.parse(json)
+                 else
+                   {}
                  end
       end
     end
