@@ -4,6 +4,7 @@ require 'open-uri'
 require 'css_parser'
 require 'json'
 require 'command_line_reporter'
+require 'yaml'
 
 class StyleStats
   def self.configure(&block)
