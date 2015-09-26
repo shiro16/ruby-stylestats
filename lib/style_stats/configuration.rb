@@ -2,6 +2,7 @@ class StyleStats
   class Configuration
     def options
       @options ||= {
+        published:                     true,
         stylesheets:                   true,
         paths:                         true,
         stylesheets:                   true,
@@ -10,10 +11,10 @@ class StyleStats
         dataUriSize:                   true,
         ratioOfDataUriSize:            true,
         gzippedSize:                   true,
-        simplicity:                    true,
         rules:                         true,
         selectors:                     true,
         declarations:                  true,
+        simplicity:                    true,
         averageOfIdentifier:           true,
         mostIdentifier:                true,
         mostIdentifierSelector:        true,
@@ -33,8 +34,8 @@ class StyleStats
         userSpecifiedSelectors:        false,
         importantKeywords:             true,
         floatProperties:               true,
-        mediaQueries:                  true,
         propertiesCount:               10,
+        mediaQueries:                  true,
         requestOptions:                {}
       }
     end
