@@ -25,22 +25,16 @@ class StyleStats
     end.flatten
 
     @css = files.inject(Css.new) do |css, file|
-      css.merge!(Css.new(file, css_options))
+      css.merge!(Css.new(file))
     end
   end
 
   def render
-    Template.new(@css, template_options).render
+    Template.new(@css, options).render
   end
 
   private
-  def css_options
-    {
-      user_agent: @options[:user_agent]
-    }
-  end
-
-  def template_options
+  def options
     {
       format: @options[:format]
     }

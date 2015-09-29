@@ -29,8 +29,7 @@ describe StyleStats::CLI do
     describe '.options' do
       it {
         expect(StyleStats::CLI.send(:options)).to eq({
-          format: options[:format],
-          user_agent: user_agent_ios
+          format: options[:format]
         })
       }
     end

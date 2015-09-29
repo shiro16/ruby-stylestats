@@ -36,7 +36,7 @@ class StyleStats
         floatProperties:               true,
         propertiesCount:               10,
         mediaQueries:                  true,
-        requestOptions:                {}
+        requestOptions:                { headers: {} }
       }
     end
   end

@@ -8,7 +8,7 @@ class StyleStats
   class Css
     attr_accessor :path, :paths, :rules, :media_types, :selectors, :stylesheets, :elements
 
-    def initialize(path = nil, options = {})
+    def initialize(path = nil)
       self.path = path
       self.paths = path ? [path] : []
       self.rules = []
@@ -17,7 +17,6 @@ class StyleStats
       self.stylesheets = []
       self.elements = []
 
-      @options = options
       parse if path
     end
 
@@ -61,7 +60,17 @@ class StyleStats
       when :unqualified
         selectors.count { |selector| selector.name.match(/\[.+\]$/) }
       when :js
-        selectors.count { |selector| selector.name.match(/[#\\.]js\\-/) }
+        if StyleStats.configuration.options[:javascriptSpecificSelectors]
+          selectors.count { |selector| selector.name.match(/#{StyleStats.configuration.options[:javascriptSpecificSelectors]}/) }
+        else
+          0
+        end
+      when :user
+        if StyleStats.configuration.options[:userSpecifiedSelectors]
+          selectors.count { |selector| selector.name.match(/#{StyleStats.configuration.options[:userSpecifiedSelectors]}/) }
+        else
+          0
+        end
       else
         selectors.count
       end
@@ -96,7 +105,7 @@ class StyleStats
 
     private
     def parse
-      fetch = Fetch.new(self.path, @options)
+      fetch = Fetch.new(self.path)
 
       self.stylesheets = fetch.stylesheets
       self.elements = fetch.elements

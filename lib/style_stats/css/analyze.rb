@@ -31,7 +31,8 @@ class StyleStats
       analyze_id_selectors
       analyze_universal_selectors
       analyze_unqualified_attribute_selectors
-      analyze_javescript_specific_selectors
+      analyze_javascript_specific_selectors
+      analyze_user_specific_selectors
       analyze_important_keywords
       analyze_fload_properties
       analyze_properties_count
@@ -147,8 +148,12 @@ class StyleStats
       @result["Unqualified Attribute Selectors"] = selectors_count(:unqualified) if StyleStats.configuration.options[:unqualifiedAttributeSelectors]
     end
 
-    def analyze_javescript_specific_selectors
+    def analyze_javascript_specific_selectors
       @result["JavaScript Specific Selectors"] = selectors_count(:js) if StyleStats.configuration.options[:javascriptSpecificSelectors]
+    end
+
+    def analyze_user_specific_selectors
+      @result["User Specific Selectors"] = selectors_count(:user) if StyleStats.configuration.options[:userSpecificSelectors]
     end
 
     def analyze_important_keywords

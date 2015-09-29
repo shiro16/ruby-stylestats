@@ -1,13 +1,12 @@
 require 'spec_helper'
 
 describe StyleStats::Css::Fetch do
-  let(:fetch) { StyleStats::Css::Fetch.new(spec_css_path, options) }
-  let(:options) { { user_agent: 'test' } }
+  let(:fetch) { StyleStats::Css::Fetch.new(spec_css_path) }
 
   describe '#initialize' do
     it 'call get method' do
       expect_any_instance_of(StyleStats::Css::Fetch).to receive(:get).with(spec_css_path)
-      expect(fetch.instance_variable_get(:@options)).to eq(options)
+      fetch
     end
   end
 

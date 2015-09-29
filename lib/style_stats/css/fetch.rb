@@ -2,10 +2,9 @@ class StyleStats::Css
   class Fetch
     attr_accessor :stylesheets, :elements
 
-    def initialize(path, options={})
+    def initialize(path)
       self.stylesheets = []
       self.elements = []
-      @options = options
       get(path)
     end
 
@@ -19,7 +18,7 @@ class StyleStats::Css
     end
 
     def request(path)
-      file = open(path, "User-Agent" => user_agent)
+      file = open(path, headers)
       case file.content_type
       when 'text/css'
         self.stylesheets.push(file.read)
@@ -49,8 +48,12 @@ class StyleStats::Css
       end
     end
 
-    def user_agent
-      @options[:user_agent] || "Ruby/StyleStats #{StyleStats::VERSION}"
+    def headers
+      if StyleStats.configuration.options[:requestOptions][:headers]['User-Agent']
+        StyleStats.configuration.options[:requestOptions][:headers]
+      else
+        { 'User-Agent' => "Ruby/StyleStats #{StyleStats::VERSION}" }
+      end
     end
   end
 end

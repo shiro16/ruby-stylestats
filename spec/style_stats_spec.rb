@@ -27,12 +27,8 @@ describe StyleStats do
   end
 
   describe 'private methods' do
-    describe '#css_options' do
-      it { expect(style_stats.send(:css_options)).to eq({user_agent: 'ios'}) }
-    end
-
-    describe '#template_options' do
-      it { expect(style_stats.send(:template_options)).to eq({format: :json}) }
+    describe '#options' do
+      it { expect(style_stats.send(:options)).to eq({format: :json}) }
     end
   end
 

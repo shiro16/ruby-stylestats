@@ -4,6 +4,7 @@ class StyleStats
       def run(files, option)
         @options = option
         StyleStats.configure do |config|
+          config.options[:requestOptions][:headers]['User-Agent'] = user_agent
           config.options.merge!(configuration)
         end
 
@@ -20,8 +21,7 @@ class StyleStats
       private
       def options
         {
-          format: @options[:format],
-          user_agent: user_agent
+          format: @options[:format]
         }
       end
 

@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe StyleStats::Css do
   describe '#initialize' do
-    let(:options) { { user_agent: 'test' } }
     it 'set default value' do
       css = StyleStats::Css.new
 
@@ -13,11 +12,6 @@ describe StyleStats::Css do
       expect(css.selectors).to eq([])
       expect(css.stylesheets).to eq([])
       expect(css.elements).to eq([])
-    end
-
-    it 'set @options' do
-      css = StyleStats::Css.new(nil, options)
-      expect(css.instance_variable_get(:@options)).to eq(options)
     end
 
     context 'when set path argument' do
@@ -89,7 +83,7 @@ describe StyleStats::Css do
     it('type is :id') { expect(css.selectors_count(:id)).to eq(1) }
     it('type is :universal') { expect(css.selectors_count(:universal)).to eq(1) }
     it('type is :unqualified') { expect(css.selectors_count(:unqualified)).to eq(1) }
-    it('type is :js') { expect(css.selectors_count(:js)).to eq(0) }
+    it('type is :js') { expect(css.selectors_count(:js)).to eq(1) }
   end
 
   describe '#declarations_count' do
@@ -124,8 +118,7 @@ describe StyleStats::Css do
 
   describe 'private methods' do
     describe '#parse' do
-      let(:options) { { user_agent: 'test' } }
-      let(:css) { StyleStats::Css.new(nil, options) }
+      let(:css) { StyleStats::Css.new(nil) }
       let(:fetch) { StyleStats::Css::Fetch.new(spec_css_path) }
 
       before do
@@ -133,7 +126,7 @@ describe StyleStats::Css do
       end
 
       it do
-        expect(StyleStats::Css::Fetch).to receive(:new).with(css.path, options).and_return(fetch)
+        expect(StyleStats::Css::Fetch).to receive(:new).with(css.path).and_return(fetch)
         expect(css).to receive(:merge_css_parser).exactly(1).times
         css.send(:parse)
       end
