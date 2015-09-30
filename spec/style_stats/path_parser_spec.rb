@@ -51,7 +51,9 @@ describe StyleStats::PathParser do
             fixtures_path_for('..'),
             fixtures_path_for('spec.css'),
             fixtures_path_for('spec.html'),
-            fixtures_path_for('spec.txt')
+            fixtures_path_for('spec.txt'),
+            fixtures_path_for('style_stats.json'),
+            fixtures_path_for('style_stats.yml')
           ])
         }
       end

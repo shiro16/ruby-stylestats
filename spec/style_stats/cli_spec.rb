@@ -2,9 +2,21 @@ require 'spec_helper'
 
 describe StyleStats::CLI do
   let(:files) { ['spec.css'] }
-  let(:options) { {format: :json, user_agent: 'ios'} }
+  let(:options) { {format: :json, user_agent: 'ios', config: fixtures_path_for('style_stats.yml')} }
 
   describe '.run' do
+    it 'call StyleStats.configure' do
+      allow_any_instance_of(StyleStats).to receive(:render)
+      expect(StyleStats).to receive(:configure)
+      StyleStats::CLI.run(files, options)
+    end
+
+    it 'set User-Agent' do
+      allow_any_instance_of(StyleStats).to receive(:render)
+      StyleStats::CLI.run(files, options)
+      expect(StyleStats.configuration.options[:requestOptions][:headers]['User-Agent']).to eq('Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.4 Version/8.0 Safari/600.1.4')
+    end
+
     it do
       expect(StyleStats).to receive(:new).and_return(StyleStats.new(files))
       expect_any_instance_of(StyleStats).to receive(:render)
@@ -54,6 +66,28 @@ describe StyleStats::CLI do
           options[:user_agent] = 'test'
           expect(StyleStats::CLI.send(:user_agent)).to eq('test')
         end
+      end
+    end
+
+    describe '.configuration' do
+      before do
+        StyleStats::CLI.instance_variable_set(:@options, options)
+      end
+
+      it 'extension yml' do
+        expect(YAML).to receive(:load_file).with(fixtures_path_for('style_stats.yml'))
+        StyleStats::CLI.send(:configuration)
+      end
+
+      it 'extension json' do
+        StyleStats::CLI.instance_variable_set(:@options, { config: fixtures_path_for('style_stats.json') })
+        expect(File).to receive(:read).with(fixtures_path_for('style_stats.json')).and_return('[]')
+        expect(JSON).to receive(:parse).with('[]')
+        StyleStats::CLI.send(:configuration)
+      end
+
+      it 'return Hash' do
+        expect(StyleStats::CLI.send(:configuration)).to be_kind_of(Hash)
       end
     end
   end

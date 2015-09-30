@@ -4,6 +4,20 @@ describe StyleStats do
   let(:style_stats) { StyleStats.new(spec_css_path, options) }
   let(:options) { {format: :json, user_agent: 'ios'} }
 
+  describe '.configure' do
+    before do
+      StyleStats.configure do |config|
+        config.options[:published] = false
+      end
+    end
+
+    it { expect(StyleStats.configuration.options[:published]).to be_falsey }
+  end
+
+  describe '.configuration' do
+    it { expect(StyleStats.configuration).to be_kind_of(StyleStats::Configuration) }
+  end
+
   describe '#initialize' do
     it 'set @options' do
       expect(style_stats.instance_variable_get(:@options)).to eq(options)

@@ -31,6 +31,7 @@ describe StyleStats::Css::Fetch do
     end
 
     describe '#request' do
+      let(:headers) { { 'User-Agent' => "Ruby/StyleStats #{StyleStats::VERSION}" } }
       before do
         allow_any_instance_of(File).to receive(:content_type).and_return(content_type)
       end
@@ -39,6 +40,8 @@ describe StyleStats::Css::Fetch do
         let(:content_type) { 'text/css' }
 
         before do
+          fetch
+          expect_any_instance_of(StyleStats::Css::Fetch).to receive(:open).with(spec_css_path, headers).and_return(File.new(spec_css_path))
           fetch.send(:request, spec_css_path)
         end
 
@@ -72,6 +75,24 @@ describe StyleStats::Css::Fetch do
     describe '#find_stylesheets' do
       it { expect(fetch.send(:find_stylesheets, doc, uri).count).to eq(1) }
       it { expect(fetch.send(:find_stylesheets, doc, uri)).to eq(["http://example.com/spec.css"]) }
+    end
+
+    describe '#headers' do
+      context 'when set requestOptions headers' do
+        before do
+          StyleStats.configuration.options[:requestOptions][:headers] = { 'User-Agent' => "test" }
+        end
+
+        it { expect(fetch.send(:headers)).to eq('User-Agent' => 'test') }
+      end
+
+      context 'when not set requestOptions headers' do
+        before do
+          StyleStats.configuration.options[:requestOptions][:headers] = {}
+        end
+
+        it { expect(fetch.send(:headers)).to eq('User-Agent' => "Ruby/StyleStats #{StyleStats::VERSION}") }
+      end
     end
   end
 end

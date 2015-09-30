@@ -83,7 +83,29 @@ describe StyleStats::Css do
     it('type is :id') { expect(css.selectors_count(:id)).to eq(1) }
     it('type is :universal') { expect(css.selectors_count(:universal)).to eq(1) }
     it('type is :unqualified') { expect(css.selectors_count(:unqualified)).to eq(1) }
-    it('type is :js') { expect(css.selectors_count(:js)).to eq(1) }
+    context 'when type is :js' do
+      it 'set javascriptSpecificSelectors' do
+        StyleStats.configuration.options[:javascriptSpecificSelectors] = StyleStats::Configuration.new.options[:javascriptSpecificSelectors]
+        expect(css.selectors_count(:js)).to eq(1)
+      end
+
+      it 'not set javascriptSpecificSelectors' do
+        StyleStats.configuration.options[:javascriptSpecificSelectors] = false
+        expect(css.selectors_count(:js)).to eq(0)
+      end
+    end
+
+    context 'when type is :user' do
+      it 'set userSpecifiedSelectors' do
+        StyleStats.configuration.options[:userSpecifiedSelectors] = 'foo'
+        expect(css.selectors_count(:user)).to eq(3)
+      end
+
+      it 'not set userSpecifiedSelectors' do
+        StyleStats.configuration.options[:userSpecifiedSelectors] = false
+        expect(css.selectors_count(:user)).to eq(0)
+      end
+    end
   end
 
   describe '#declarations_count' do
