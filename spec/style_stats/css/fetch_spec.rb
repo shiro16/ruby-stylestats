@@ -32,6 +32,7 @@ describe StyleStats::Css::Fetch do
 
     describe '#request' do
       let(:headers) { { 'User-Agent' => "Ruby/StyleStats #{StyleStats::VERSION}" } }
+
       before do
         allow_any_instance_of(File).to receive(:content_type).and_return(content_type)
       end
@@ -40,6 +41,7 @@ describe StyleStats::Css::Fetch do
         let(:content_type) { 'text/css' }
 
         before do
+          StyleStats.configuration.options[:requestOptions][:headers] = {}
           fetch
           expect_any_instance_of(StyleStats::Css::Fetch).to receive(:open).with(spec_css_path, headers).and_return(File.new(spec_css_path))
           fetch.send(:request, spec_css_path)
