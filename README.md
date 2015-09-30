@@ -131,6 +131,37 @@ $ style_stats http://example.com/
 $ style_stats foo.css -f <json|html|md>
 ```
 
+:## CLI Reference
+
+Help:
+
+```shell
+$ style_stats --help
+Usage: style_stats [options] <file ...>
+    -h, --help                       output usage information
+    -V, --version                    output the version number
+    -c, --config <path>              set configurations
+    -f, --format <format>            set the output format <json|html|md>
+    -m, --mobile [name]              set the mobile user agent
+        --user-anget <string>        set the user agent</string></format></path>
+```
+
+Example:
+
+```shell
+$ style_stats path/to/stylesheet.css -c style_stats.yml
+┌────────────────────────────┬────────┐
+│ Style Sheets               │ 1      │
+├────────────────────────────┼────────┤
+│ Size                       │ 19.0KB │
+├────────────────────────────┼────────┤
+│ Gzipped Size               │ 3.7KB  │
+├────────────────────────────┼────────┤
+│ Total Unique Font Families │ 3      │
+└────────────────────────────┴────────┘
+```
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment. Run `bundle exec style_stats` to use the gem in this directory, ignoring other installed copies of this gem.
