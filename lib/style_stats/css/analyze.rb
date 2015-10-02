@@ -3,7 +3,7 @@ class StyleStats
     def analyze
       @result = {}
       @selector = sort_selector_by_declarations_count.first
-      @most_indentifier_selector = selectors.first || StyleStats::Css::Selector.new
+      @most_indentifier_selector = selectors.first || StyleStats::Css::Selector.new("")
       analyze_published
       analyze_paths
       analyze_stylesheets
@@ -40,6 +40,7 @@ class StyleStats
       @result
     end
 
+    private
     def analyze_published
       @result["Published"] = Time.now if StyleStats.configuration.options[:published]
     end

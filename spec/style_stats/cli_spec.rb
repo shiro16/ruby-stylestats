@@ -87,7 +87,7 @@ describe StyleStats::CLI do
       end
 
       it 'return Hash' do
-        expect(StyleStats::CLI.send(:configuration)).to be_kind_of(Hash)
+        expect(StyleStats::CLI.send(:configuration)).to be_a(Hash)
       end
     end
   end

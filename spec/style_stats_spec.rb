@@ -15,7 +15,7 @@ describe StyleStats do
   end
 
   describe '.configuration' do
-    it { expect(StyleStats.configuration).to be_kind_of(StyleStats::Configuration) }
+    it { expect(StyleStats.configuration).to be_a(StyleStats::Configuration) }
   end
 
   describe '#initialize' do
@@ -29,7 +29,7 @@ describe StyleStats do
     end
 
     it 'set instance of StyleStats::Css to @css ' do
-      expect(style_stats.instance_variable_get(:@css)).to be_kind_of(StyleStats::Css)
+      expect(style_stats.instance_variable_get(:@css)).to be_a(StyleStats::Css)
     end
   end
 

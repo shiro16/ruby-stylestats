@@ -119,7 +119,7 @@ describe StyleStats::Css do
   describe '#[]' do
     let(:css) { StyleStats::Css.new(spec_css_path) }
 
-    it { expect(css["font-family"]).to be_kind_of(Hash) }
+    it { expect(css["font-family"]).to be_a(Hash) }
   end
 
   describe '#clear_aggregate' do
@@ -160,7 +160,7 @@ describe StyleStats::Css do
 
       it do
         expect_any_instance_of(CssParser::Parser).to receive(:add_block!).with(style)
-        expect(css.send(:create_css_parser, style)).to be_kind_of(CssParser::Parser)
+        expect(css.send(:create_css_parser, style)).to be_a(CssParser::Parser)
       end
     end
 
@@ -187,7 +187,7 @@ describe StyleStats::Css do
     describe '#aggregate' do
       let(:css) { StyleStats::Css.new(spec_css_path) }
 
-      it { expect(css.send(:aggregate)).to be_kind_of(StyleStats::Css::AggregateDeclaration) }
+      it { expect(css.send(:aggregate)).to be_a(StyleStats::Css::AggregateDeclaration) }
     end
   end
 end
