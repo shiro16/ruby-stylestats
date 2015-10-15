@@ -7,6 +7,7 @@ class StyleStats
     def initialize(css, options = {})
       @css = css
       @options = {format: :default}
+      options[:format] = :template if options[:template]
       @options.merge!(options)
     end
 
@@ -17,6 +18,9 @@ class StyleStats
         ERB.new(text, nil, '-').run(binding)
       when :json
         puts @css.analyze.to_json
+      when :template
+        text = File.read(@options[:template])
+        ERB.new(text, nil, '-').run(binding)
       else
         Table.new(@css.analyze).run
       end

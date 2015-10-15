@@ -21,7 +21,8 @@ class StyleStats
       private
       def options
         {
-          format: @options[:format]
+          format:   @options[:format],
+          template: @options[:template]
         }
       end
 
