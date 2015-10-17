@@ -1,0 +1,8 @@
+<table class="data">
+  <%- @css.analyze.each do |k, v| -%>
+    <tr class="data__row">
+      <th><%= k %></th>
+	  <td><%= v.is_a?(Array) ? v.join("\n") : v %></td>
+    </tr>
+  <%- end -%>
+</table>
