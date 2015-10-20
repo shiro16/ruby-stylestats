@@ -131,7 +131,7 @@ $ style_stats http://example.com/
 $ style_stats foo.css -f <json|html|md>
 ```
 
-:## CLI Reference
+## CLI Reference
 
 Help:
 
