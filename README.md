@@ -142,6 +142,7 @@ Usage: style_stats [options] <file ...>
     -V, --version                    output the version number
     -c, --config <path>              set configurations
     -f, --format <format>            set the output format <json|html|md>
+    -t, --template <path>            set the template path for output format
     -m, --mobile [name]              set the mobile user agent
         --user-anget <string>        set the user agent</string></format></path>
 ```
