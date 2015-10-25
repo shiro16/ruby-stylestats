@@ -6,9 +6,9 @@ class StyleStats
       @most_indentifier_selector = selectors.first || StyleStats::Css::Selector.new("")
       
       # Set default to empty if not present in stylesheet
-      self["font-size"][:values] ||= []
-      self["font-family"][:values] ||= []
-      self["color"][:values] ||= []
+      self["font-size"][:values] = [] if self["font-size"][:values].nil?
+      self["font-family"][:values] = [] if self["font-family"][:values].nil?
+      self["color"][:values] = [] if  self["color"][:values].nil?
       
       analyze_published
       analyze_paths
