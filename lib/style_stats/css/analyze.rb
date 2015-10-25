@@ -4,6 +4,12 @@ class StyleStats
       @result = {}
       @selector = sort_selector_by_declarations_count.first
       @most_indentifier_selector = selectors.first || StyleStats::Css::Selector.new("")
+      
+      # Set default to empty if not present in stylesheet
+      self["font-size"][:values] ||= []
+      self["font-family"][:values] ||= []
+      self["color"][:values] ||= []
+      
       analyze_published
       analyze_paths
       analyze_stylesheets
