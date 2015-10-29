@@ -4,6 +4,7 @@ class StyleStats
       @result = {}
       @selector = sort_selector_by_declarations_count.first
       @most_indentifier_selector = selectors.first || StyleStats::Css::Selector.new("")
+      
       analyze_published
       analyze_paths
       analyze_stylesheets
@@ -114,27 +115,27 @@ class StyleStats
     end
 
     def analyze_total_unique_font_sizes
-      @result["Total Unique Font Sizes"] = self["font-size"][:values].count if StyleStats.configuration.options[:totalUniqueFontSizes]
+      @result["Total Unique Font Sizes"] = (self["font-size"][:values] || []).count if StyleStats.configuration.options[:totalUniqueFontSizes]
     end
 
     def analyze_unique_font_sizes
-      @result["Unique Font Sizes"] = self["font-size"][:values] if StyleStats.configuration.options[:uniqueFontSizes]
+      @result["Unique Font Sizes"] = (self["font-size"][:values] || []) if StyleStats.configuration.options[:uniqueFontSizes]
     end
 
     def analyze_total_unique_font_families
-      @result["Total Unique Font Families"] = self["font-family"][:values].count if StyleStats.configuration.options[:totalUniqueFontFamilies]
+      @result["Total Unique Font Families"] = (self["font-family"][:values] || []).count if StyleStats.configuration.options[:totalUniqueFontFamilies]
     end
 
     def analyze_unique_font_families
-      @result["Unique Font Families"] = self["font-family"][:values] if StyleStats.configuration.options[:uniqueFontFamilies]
+      @result["Unique Font Families"] = (self["font-family"][:values] || []) if StyleStats.configuration.options[:uniqueFontFamilies]
     end
 
     def analyze_total_unique_colors
-      @result["Total Unique Colors"] = self["color"][:values].count if StyleStats.configuration.options[:totalUniqueColors]
+      @result["Total Unique Colors"] = (self["color"][:values] || []).count if StyleStats.configuration.options[:totalUniqueColors]
     end
 
     def analyze_unique_colors
-      @result["Unique Colors"] = self["color"][:values] if StyleStats.configuration.options[:uniqueColors]
+      @result["Unique Colors"] = (self["color"][:values] || []) if StyleStats.configuration.options[:uniqueColors]
     end
 
     def analyze_id_selectors
