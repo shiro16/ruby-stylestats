@@ -45,8 +45,21 @@ class StyleStats
                    json = File.read(@options[:config])
                    JSON.parse(json)
                  else
-                   {}
+                   @options[:number] ? number_config : {}
                  end
+      end
+
+      def number_config
+        {
+          published: false,
+          paths: false,
+          mostIdentifierSelector: false,
+          lowestCohesionSelector: false,
+          uniqueFontFamilies: false,
+          uniqueFontSizes: false,
+          uniqueColors: false,
+          propertiesCount: false
+        }
       end
     end
   end

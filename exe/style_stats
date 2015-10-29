@@ -21,6 +21,7 @@ end
 opt.on('-c', '--config <path>', 'set configurations') { |v| options[:config] = v }
 opt.on('-f', '--format <format>', 'set the output format <json|html|md>') { |v| options[:format] = v }
 opt.on('-t', '--template <path>', 'set the template path for output format') { |v| options[:template] = v }
+opt.on('-n', '--number', 'show only numeral metrics') { |v| options[:number] = v }
 opt.on('-m', '--mobile [name]', 'set the mobile user agent') { |v| options[:user_agent] = v || 'ios' }
 opt.on('--user-anget <string>', 'set the user agent') { |v| options[:user_agent] = v }
 
