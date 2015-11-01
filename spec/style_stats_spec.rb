@@ -42,7 +42,7 @@ describe StyleStats do
 
   describe 'private methods' do
     describe '#options' do
-      it { expect(style_stats.send(:options)).to eq({format: :json}) }
+      it { expect(style_stats.send(:options)).to eq({format: :json, template: nil}) }
     end
   end
 

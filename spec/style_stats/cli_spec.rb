@@ -41,7 +41,8 @@ describe StyleStats::CLI do
     describe '.options' do
       it {
         expect(StyleStats::CLI.send(:options)).to eq({
-          format: options[:format]
+          format: options[:format],
+          template: nil
         })
       }
     end
@@ -74,20 +75,53 @@ describe StyleStats::CLI do
         StyleStats::CLI.instance_variable_set(:@options, options)
       end
 
-      it 'extension yml' do
-        expect(YAML).to receive(:load_file).with(fixtures_path_for('style_stats.yml'))
-        StyleStats::CLI.send(:configuration)
+      context 'when extension yml' do
+        it do
+          expect(YAML).to receive(:load_file).with(fixtures_path_for('style_stats.yml'))
+          StyleStats::CLI.send(:configuration)
+        end
       end
 
-      it 'extension json' do
-        StyleStats::CLI.instance_variable_set(:@options, { config: fixtures_path_for('style_stats.json') })
-        expect(File).to receive(:read).with(fixtures_path_for('style_stats.json')).and_return('[]')
-        expect(JSON).to receive(:parse).with('[]')
-        StyleStats::CLI.send(:configuration)
+      context 'when extension json' do
+        it do
+          StyleStats::CLI.instance_variable_set(:@options, { config: fixtures_path_for('style_stats.json') })
+          expect(File).to receive(:read).with(fixtures_path_for('style_stats.json')).and_return('[]')
+          expect(JSON).to receive(:parse).with('[]')
+          StyleStats::CLI.send(:configuration)
+        end
       end
 
-      it 'return Hash' do
-        expect(StyleStats::CLI.send(:configuration)).to be_a(Hash)
+      context 'options number is true' do
+        it do
+          StyleStats::CLI.instance_variable_set(:@options, { number: true })
+          expect(StyleStats::CLI).to receive(:number_config)
+          StyleStats::CLI.send(:configuration)
+        end
+      end
+
+      context 'when otpions other values' do
+        let(:options) { {} }
+
+        it { expect(StyleStats::CLI.send(:configuration)).to eq({}) }
+      end
+    end
+
+    describe '.number_config' do
+      before do
+        StyleStats::CLI.instance_variable_set(:@options, { number: true })
+      end
+
+      it do
+        expect(StyleStats::CLI.send(:configuration)).to eq({
+          published: false,
+          paths: false,
+          mostIdentifierSelector: false,
+          lowestCohesionSelector: false,
+          uniqueFontFamilies: false,
+          uniqueFontSizes: false,
+          uniqueColors: false,
+          propertiesCount: false
+        })
       end
     end
   end
