@@ -3,7 +3,6 @@ class StyleStats
     def options
       @options ||= {
         published:                     true,
-        stylesheets:                   true,
         paths:                         true,
         stylesheets:                   true,
         styleElements:                 true,
