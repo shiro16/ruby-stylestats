@@ -56,6 +56,7 @@ describe StyleStats::Css::Fetch do
         before do
           expect(fetch).to receive(:find_stylesheets).and_return([])
           expect(fetch).to receive(:find_elements).and_return([])
+          allow(fetch).to receive(:options).and_return("r")
           fetch.send(:request, fixtures_path_for('spec.html'))
         end
 
@@ -65,6 +66,10 @@ describe StyleStats::Css::Fetch do
 
       context 'when content type other' do
         let(:content_type) { 'text' }
+
+        before do
+          allow(fetch).to receive(:options).and_return("r")
+        end
 
         it { expect{ fetch.send(:request, fixtures_path_for('spec.txt'))}.to raise_error(StyleStats::ContentError) }
       end
