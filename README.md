@@ -1,5 +1,7 @@
 # Ruby StyleStats
 
+[![Build Status](https://travis-ci.org/shiro16/ruby-stylestats.svg)](https://travis-ci.org/shiro16/ruby-stylestats)
+
 [Oriainal StyleStats](https://github.com/t32k/stylestats) is a Node.js library to collect CSS statistics!  
 This gem was port in Ruby
 
